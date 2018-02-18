@@ -3,6 +3,9 @@ package realworld.vertx.java;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
+import realworld.vertx.java.user.RegisterUser;
+import realworld.vertx.java.user.UserService;
 
 /**
  * @author Samer Kanjo
@@ -10,9 +13,17 @@ import io.vertx.ext.web.Router;
  */
 public class HttpServer extends AbstractVerticle {
 
+  private UserService userService;
+
   @Override
   public void start(Future<Void> startFuture) {
+    userService = UserService.createProxy(vertx, "user.queue");
+
     final Router r = Router.router(vertx);
+
+    r.route("/api/users").handler(BodyHandler.create().setBodyLimit(4096));
+    r.post("/api/users").handler(new RegisterUser(userService));
+
     r.get().handler(event -> {
       event.response().end("<html><head><title>Hello Conduit</title></head><body><h1>Hello Conduit!</h1></body></html>");
     });
