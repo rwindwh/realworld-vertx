@@ -53,9 +53,7 @@ public class JdbcUserService implements UserService {
 
   @Override
   public UserService register(String username, String password, String email, Handler<AsyncResult<Void>> resultHandler) {
-    final UUID id = UUID.randomUUID();
-
-    final JsonArray data = new JsonArray().add(id.toString()).add(username).add(password).add(email);
+    final JsonArray data = new JsonArray().add(username).add(password).add(email);
 
     dbClient.updateWithParams(sqlQueries.get(SqlQuery.INSERT_USER), data, res -> {
       if (res.succeeded()) {
