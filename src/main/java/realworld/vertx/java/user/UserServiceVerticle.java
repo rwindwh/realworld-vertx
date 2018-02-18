@@ -21,9 +21,9 @@ public class UserServiceVerticle extends AbstractVerticle {
 
   private static Logger LOGGER = LoggerFactory.getLogger(UserServiceVerticle.class);
 
-  private static final String CONFIG_WIKIDB_JDBC_URL = "wikidb.jdbc.url";
-  private static final String CONFIG_WIKIDB_JDBC_DRIVER_CLASS = "wikidb.jdbc.driver_class";
-  private static final String CONFIG_WIKIDB_JDBC_MAX_POOL_SIZE = "wikidb.jdbc.max_pool_size";
+  private static final String CONFIG_USERDB_JDBC_URL = "userdb.jdbc.url";
+  private static final String CONFIG_USERDB_JDBC_DRIVER_CLASS = "userdb.jdbc.driver_class";
+  private static final String CONFIG_USERDB_JDBC_MAX_POOL_SIZE = "userdb.jdbc.max_pool_size";
 
   @Override
   public void start(Future<Void> startFuture) throws Exception {
@@ -32,9 +32,9 @@ public class UserServiceVerticle extends AbstractVerticle {
     final HashMap<SqlQuery, String> sqlQueries = loadSqlQueries();
 
     final JDBCClient dbClient = JDBCClient.createShared(vertx, new JsonObject()
-      .put("url", config().getString(CONFIG_WIKIDB_JDBC_URL, "jdbc:hsqldb:file:db/user"))
-      .put("driver_class", config().getString(CONFIG_WIKIDB_JDBC_DRIVER_CLASS, "org.hsqldb.jdbcDriver"))
-      .put("max_pool_size", config().getInteger(CONFIG_WIKIDB_JDBC_MAX_POOL_SIZE, 30)));
+      .put("url", config().getString(CONFIG_USERDB_JDBC_URL, "jdbc:hsqldb:file:target/hsqldb/user"))
+      .put("driver_class", config().getString(CONFIG_USERDB_JDBC_DRIVER_CLASS, "org.hsqldb.jdbcDriver"))
+      .put("max_pool_size", config().getInteger(CONFIG_USERDB_JDBC_MAX_POOL_SIZE, 30)));
 
     UserService.create(dbClient, sqlQueries, ready -> {
       if (ready.succeeded()) {
