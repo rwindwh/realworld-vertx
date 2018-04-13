@@ -1,28 +1,28 @@
-package realworld.vertx.java;
+package realworld.vertx.java.user;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
-import realworld.vertx.java.user.RegisterUser;
-import realworld.vertx.java.user.UserService;
 
 /**
  * @author Samer Kanjo
- * @since 0.1.0 1/1/18 1:01 PM
+ * @since 0.2.0 2/18/18 4:54 PM
  */
-public class HttpServer extends AbstractVerticle {
+public class UserHttpVerticle extends AbstractVerticle {
 
-  private UserService userService;
+  private final UserService userService;
+
+  public UserHttpVerticle(UserService userService) {
+    this.userService = userService;
+  }
 
   @Override
   public void start(Future<Void> startFuture) {
-    userService = UserService.createProxy(vertx, "user.queue");
-
     final Router r = Router.router(vertx);
 
-    r.route("/api/users").handler(BodyHandler.create().setBodyLimit(4096));
-    r.post("/api/users").handler(new RegisterUser(userService));
+    r.route("/api/users").handler(BodyHandler.create().setBodyLimit(512));
+    r.post("/api/users").handler(new RegisterUserHandler(userService));
 
     r.get().handler(event -> {
       event.response().end("<html><head><title>Hello Conduit</title></head><body><h1>Hello Conduit!</h1></body></html>");
@@ -32,10 +32,8 @@ public class HttpServer extends AbstractVerticle {
 
     s.requestHandler(r::accept).listen(port(), result -> {
       if (result.succeeded()) {
-        System.out.println("Conduit started on port " + port());
         startFuture.complete();
       } else {
-        System.out.println("Failed to start HTTP server");
         startFuture.fail(result.cause());
       }
     });

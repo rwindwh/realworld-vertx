@@ -15,9 +15,9 @@
   <properties>
     <java.source.version>1.8</java.source.version>
     <java.target.version>1.8</java.target.version>
-    <vertx.version>3.5.0</vertx.version>
+    <vertx.version>3.5.1</vertx.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <main.class>realworld.vertx.java.ConduitBackend</main.class>
+    <main.class>realworld.vertx.java.server.ConduitBackend</main.class>
   </properties>
 
   <dependencyManagement>
@@ -43,21 +43,12 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-jdbc-client</artifactId>
+      <artifactId>vertx-auth-jwt</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-service-proxy</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-codegen</artifactId>
-      <classifier>processor</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <version>2.4.0</version>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>24.1-jre</version>
     </dependency>
 
     <dependency>
@@ -83,6 +74,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.9.1</version>
+    </dependency>
+    <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-unit</artifactId>
       <scope>test</scope>
@@ -99,22 +95,7 @@
           <source>${java.source.version}</source>
           <target>${java.target.version}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <!-- https://issues.apache.org/jira/browse/MCOMPILER-209: Set to false to enable incremental compilation -->
-          <useIncrementalCompilation>false</useIncrementalCompilation>
         </configuration>
-        <executions>
-          <execution>
-            <id>default-compile</id>
-            <configuration>
-              <annotationProcessors>
-                <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
-              </annotationProcessors>
-              <!--
-              <generatedSourcesDirectory>${project.basedir}/src/main/generated</generatedSourcesDirectory>
-              -->
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
