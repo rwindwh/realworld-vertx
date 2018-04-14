@@ -1,4 +1,4 @@
-package realworld.vertx.java.user.identity;
+package realworld.vertx.java.user;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -29,9 +29,9 @@ public class Passwords {
     final byte[] salt = new byte[SALT_BYTE_SIZE];
     random.nextBytes(salt);
 
-    byte[] dk = pkbdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
+    final byte[] dk = pkbdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
 
-    Base64.Encoder enc = Base64.getUrlEncoder().withoutPadding();
+    final Base64.Encoder enc = Base64.getUrlEncoder().withoutPadding();
     final String hash = enc.encodeToString(salt) + ":" + enc.encodeToString(dk);
 
     return hash;
@@ -44,11 +44,11 @@ public class Passwords {
       throw new IllegalArgumentException("Expected hash is missing parts");
     }
 
-    Base64.Decoder dec = Base64.getUrlDecoder();
-    byte[] salt = dec.decode(parts[SALT_INDEX]);
-    byte[] expectedHash = dec.decode(parts[PBKDF2_INDEX]);
+    final Base64.Decoder dec = Base64.getUrlDecoder();
+    final byte[] salt = dec.decode(parts[SALT_INDEX]);
+    final byte[] expectedHash = dec.decode(parts[PBKDF2_INDEX]);
 
-    byte[] actualHash = pkbdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
+    final byte[] actualHash = pkbdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
 
     return slowEquals(expectedHash, actualHash);
   }

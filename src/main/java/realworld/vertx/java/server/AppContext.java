@@ -1,10 +1,7 @@
 package realworld.vertx.java.server;
 
-import realworld.vertx.java.user.*;
-import realworld.vertx.java.user.identity.InMemoryUserIdentityStore;
-import realworld.vertx.java.user.identity.UserIdentityStore;
-import realworld.vertx.java.user.profile.InMemoryUserProfileStore;
-import realworld.vertx.java.user.profile.UserProfileStore;
+import realworld.vertx.java.user.UserService;
+import realworld.vertx.java.user.VolatileUserService;
 
 /**
  * @author Samer Kanjo
@@ -13,28 +10,12 @@ import realworld.vertx.java.user.profile.UserProfileStore;
 public class AppContext {
 
   private UserService userService;
-  private UserIdentityStore identityStore;
-  private UserProfileStore profileStore;
 
   public UserService userService() {
     if (userService == null) {
-      userService = new LocalUserService(identityStore(), profileStore());
+      userService = new VolatileUserService();
     }
     return userService;
   }
-
-  UserIdentityStore identityStore() {
-    if (identityStore == null) {
-      identityStore = new InMemoryUserIdentityStore();
-    }
-    return identityStore;
-  }
-
-  UserProfileStore profileStore() {
-    if (profileStore == null) {
-      profileStore = new InMemoryUserProfileStore();
-    }
-    return profileStore;
-  }
-
+  
 }

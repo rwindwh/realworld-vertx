@@ -1,4 +1,4 @@
-package realworld.vertx.java.user.identity;
+package realworld.vertx.java.user;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
@@ -6,15 +6,15 @@ import io.vertx.core.json.JsonObject;
 
 /**
  * @author Samer Kanjo
- * @since 0.2.0 2/18/18 10:30 PM
+ * @since 0.2.0 4/13/18 10:50 AM
  */
-public class UserIdentity {
+public class UserRegistrationRequest {
 
   public static Builder newBuilder() {
     return new Builder();
   }
 
-  public static UserIdentity parseFrom(JsonObject json) {
+  public static UserRegistrationRequest parseFrom(JsonObject json) {
     final Builder b = newBuilder();
 
     if (json.getValue("username") instanceof String) {
@@ -25,10 +25,7 @@ public class UserIdentity {
       b.email((String) json.getValue("email"));
     }
 
-    if (json.getValue("hashedPassword") instanceof String) {
-      b.hashedPassword((String) json.getValue("hashedPassword"));
-
-    } else if (json.getValue("password") instanceof String) {
+    if (json.getValue("password") instanceof String) {
       b.password((String) json.getValue("password"));
     }
 
@@ -39,25 +36,10 @@ public class UserIdentity {
   private String email;
   private String hashedPassword;
 
-  private UserIdentity(Builder b) {
+  private UserRegistrationRequest(Builder b) {
     this.username = b.username;
     this.hashedPassword = b.hashedPassword;
     this.email = b.email;
-  }
-
-  public void writeTo(JsonObject json) {
-    final JsonObject profileJson = new JsonObject();
-    json.put("identity", profileJson);
-
-    if (!username.isEmpty()) {
-      profileJson.put("username", username);
-    }
-    if (!email.isEmpty()) {
-      profileJson.put("email", email);
-    }
-    if (!hashedPassword.isEmpty()) {
-      profileJson.put("hashedPassword", hashedPassword);
-    }
   }
 
   public String username() {
@@ -77,7 +59,7 @@ public class UserIdentity {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    UserIdentity that = (UserIdentity) o;
+    UserRegistrationRequest that = (UserRegistrationRequest) o;
 
     if (!username.equals(that.username)) return false;
     if (!email.equals(that.email)) return false;
@@ -117,7 +99,7 @@ public class UserIdentity {
         && !hashedPassword.isEmpty();
     }
 
-    public Builder mergeFrom(UserIdentity other) {
+    public Builder mergeFrom(UserRegistrationRequest other) {
       username(other.username);
       email(other.email);
       password(other.hashedPassword);
@@ -133,7 +115,7 @@ public class UserIdentity {
       return this;
     }
 
-    public UserIdentity build() {
+    public UserRegistrationRequest build() {
       if (username.isEmpty()) {
         throw new IllegalArgumentException("username is required");
       }
@@ -144,7 +126,7 @@ public class UserIdentity {
         throw new IllegalArgumentException("password is required");
       }
 
-      return new UserIdentity(this);
+      return new UserRegistrationRequest(this);
     }
 
     public Builder username(String value) {
@@ -159,11 +141,6 @@ public class UserIdentity {
 
     public Builder password(String value) {
       hashedPassword = Passwords.hash(CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value)));
-      return this;
-    }
-
-    public Builder hashedPassword(String value) {
-      hashedPassword = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }
 

@@ -6,8 +6,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import realworld.vertx.java.user.identity.UserIdentity;
-import realworld.vertx.java.user.profile.UserProfile;
 
 /**
  * @author Samer Kanjo
@@ -31,29 +29,24 @@ public class RegisterUserHandler implements Handler<RoutingContext> {
         return;
       }
 
-      final UserIdentity newIdentity = UserIdentity.parseFrom(event.getBodyAsJson());
-
-      LOGGER.debug(newIdentity.toString());
+      final UserRegistrationRequest regReq = UserRegistrationRequest.parseFrom(event.getBodyAsJson());
 
       // validate request
 
-      userService.register(newIdentity, reply -> {
-        if (reply.succeeded()) {
+      userService.register(regReq, registration -> {
+        if (registration.succeeded()) {
 
-          userService.get(newIdentity.username(), get -> {
-            if (get.succeeded()) {
-              final UserProfile user = get.result();
-              final JsonObject json = new JsonObject();
-              user.writeTo(json);
+          final RegisteredUser regUser = registration.result();
+          final AuthenticatedUser authUser = AuthenticatedUser.newBuilder()
+            .user(regUser)
+            .token(WebTokens.create(regUser.email()))
+            .build();
 
-              event.response().putHeader("Content-Type", "application/json; charset=utf-8");
-              event.response().end(json.encode());
+          final JsonObject json = new JsonObject();
+          authUser.writeTo(json);
 
-            } else {
-              event.response().setStatusCode(500).end("failed to get user after registration");
-
-            }
-          });
+          event.response().putHeader("Content-Type", "application/json; charset=utf-8");
+          event.response().end(json.encode());
 
         } else {
           event.response().setStatusCode(500).end("failed to register user");

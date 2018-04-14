@@ -1,7 +1,6 @@
-package realworld.vertx.java.user.identity;
+package realworld.vertx.java.user;
 
 import org.junit.Test;
-import realworld.vertx.java.user.identity.Passwords;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
