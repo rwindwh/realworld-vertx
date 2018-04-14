@@ -2,6 +2,9 @@ package realworld.vertx.java.user;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
+import realworld.vertx.java.validation.Errors;
+import realworld.vertx.java.validation.Validate;
+import realworld.vertx.java.validation.ValidationException;
 
 /**
  * @author Samer Kanjo
@@ -134,20 +137,19 @@ class RegisteredUser {
     }
 
     RegisteredUser build() {
-      if (id <= 0) {
-        throw new IllegalArgumentException("id is required");
-      }
-      if (email.isEmpty()) {
-        throw new IllegalArgumentException("email is required");
-      }
-      if (hashedPassword.isEmpty()) {
-        throw new IllegalArgumentException("hashedPassword is required");
-      }
-      if (username.isEmpty()) {
-        throw new IllegalArgumentException("username is required");
+      final RegisteredUser provisional = new RegisteredUser(this);
+
+      final Errors errors = new Errors();
+      Validate.required(errors, provisional.id(), "id");
+      Validate.required(errors, provisional.email(), "email");
+      Validate.required(errors, provisional.hashedPassword(), "password");
+      Validate.required(errors, provisional.username(), "username");
+
+      if (!errors.empty()) {
+        throw new ValidationException(errors);
       }
 
-      return new RegisteredUser(this);
+      return provisional;
     }
 
     Builder id(long value) {

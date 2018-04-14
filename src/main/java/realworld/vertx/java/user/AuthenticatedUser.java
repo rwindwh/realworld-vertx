@@ -3,6 +3,9 @@ package realworld.vertx.java.user;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 import io.vertx.core.json.JsonObject;
+import realworld.vertx.java.validation.Errors;
+import realworld.vertx.java.validation.Validate;
+import realworld.vertx.java.validation.ValidationException;
 
 /**
  * @author Samer Kanjo
@@ -80,14 +83,17 @@ class AuthenticatedUser {
     }
 
     AuthenticatedUser build() {
-      if (user == null) {
-        throw new IllegalArgumentException("user is required");
-      }
-      if (token.isEmpty()) {
-        throw new IllegalArgumentException("token is required");
+      final AuthenticatedUser provisional = new AuthenticatedUser(this);
+
+      final Errors errors = new Errors();
+      Validate.required(errors, provisional.user(), "user");
+      Validate.required(errors, provisional.token(), "token");
+
+      if (!errors.empty()) {
+        throw new ValidationException(errors);
       }
 
-      return new AuthenticatedUser(this);
+      return provisional;
     }
 
     Builder user(RegisteredUser value) {

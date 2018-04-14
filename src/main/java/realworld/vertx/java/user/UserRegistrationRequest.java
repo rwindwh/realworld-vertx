@@ -3,6 +3,9 @@ package realworld.vertx.java.user;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 import io.vertx.core.json.JsonObject;
+import realworld.vertx.java.validation.Errors;
+import realworld.vertx.java.validation.Validate;
+import realworld.vertx.java.validation.ValidationException;
 
 /**
  * @author Samer Kanjo
@@ -116,17 +119,18 @@ class UserRegistrationRequest {
     }
 
     UserRegistrationRequest build() {
-      if (username.isEmpty()) {
-        throw new IllegalArgumentException("username is required");
-      }
-      if (email.isEmpty()) {
-        throw new IllegalArgumentException("email is required");
-      }
-      if (hashedPassword.isEmpty()) {
-        throw new IllegalArgumentException("password is required");
+      final UserRegistrationRequest provisional = new UserRegistrationRequest(this);
+
+      final Errors errors = new Errors();
+      Validate.required(errors, provisional.username, "username");
+      Validate.required(errors, provisional.email, "email");
+      Validate.required(errors, provisional.hashedPassword, "password");
+
+      if (!errors.empty()) {
+        throw new ValidationException(errors);
       }
 
-      return new UserRegistrationRequest(this);
+      return provisional;
     }
 
     Builder username(String value) {

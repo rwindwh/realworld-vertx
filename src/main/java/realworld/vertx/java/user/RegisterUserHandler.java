@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import realworld.vertx.java.validation.ValidationException;
 
 /**
  * @author Samer Kanjo
@@ -31,8 +32,6 @@ class RegisterUserHandler implements Handler<RoutingContext> {
 
       final UserRegistrationRequest regReq = UserRegistrationRequest.parseFrom(event.getBodyAsJson());
 
-      // validate request
-
       userService.register(regReq, registration -> {
         if (registration.succeeded()) {
 
@@ -54,8 +53,15 @@ class RegisterUserHandler implements Handler<RoutingContext> {
       });
 
     } catch (DecodeException e) {
+      event.response().putHeader("Content-Type", "application/json; charset=utf-8");
       event.response().setStatusCode(422).end("{\"errors\":{\"body\":[\"invalid json\"]}}");
-      LOGGER.warn("Failed to decode JSON", e);
+
+    } catch (ValidationException e) {
+      final JsonObject message = new JsonObject();
+      e.errors().writeTo(message);
+
+      event.response().putHeader("Content-Type", "application/json; charset=utf-8");
+      event.response().setStatusCode(422).end(message.encode());
     }
   }
 
