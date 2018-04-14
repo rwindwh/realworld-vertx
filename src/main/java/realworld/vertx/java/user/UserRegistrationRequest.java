@@ -8,13 +8,13 @@ import io.vertx.core.json.JsonObject;
  * @author Samer Kanjo
  * @since 0.2.0 4/13/18 10:50 AM
  */
-public class UserRegistrationRequest {
+class UserRegistrationRequest {
 
-  public static Builder newBuilder() {
+  static Builder newBuilder() {
     return new Builder();
   }
 
-  public static UserRegistrationRequest parseFrom(JsonObject json) {
+  static UserRegistrationRequest parseFrom(JsonObject json) {
     final Builder b = newBuilder();
 
     if (json.getValue("username") instanceof String) {
@@ -42,15 +42,15 @@ public class UserRegistrationRequest {
     this.email = b.email;
   }
 
-  public String username() {
+  String username() {
     return username;
   }
 
-  public String email() {
+  String email() {
     return email;
   }
 
-  public String hashedPassword() {
+  String hashedPassword() {
     return hashedPassword;
   }
 
@@ -83,7 +83,7 @@ public class UserRegistrationRequest {
       '}';
   }
 
-  public static class Builder {
+  static class Builder {
 
     private String username;
     private String email;
@@ -93,13 +93,13 @@ public class UserRegistrationRequest {
       clear();
     }
 
-    public boolean isInitialized() {
+    boolean isInitialized() {
       return !username.isEmpty()
         && !email.isEmpty()
         && !hashedPassword.isEmpty();
     }
 
-    public Builder mergeFrom(UserRegistrationRequest other) {
+    Builder mergeFrom(UserRegistrationRequest other) {
       username(other.username);
       email(other.email);
       password(other.hashedPassword);
@@ -107,7 +107,7 @@ public class UserRegistrationRequest {
       return this;
     }
 
-    public Builder clear() {
+    Builder clear() {
       username = "";
       email = "";
       hashedPassword = "";
@@ -115,7 +115,7 @@ public class UserRegistrationRequest {
       return this;
     }
 
-    public UserRegistrationRequest build() {
+    UserRegistrationRequest build() {
       if (username.isEmpty()) {
         throw new IllegalArgumentException("username is required");
       }
@@ -129,17 +129,17 @@ public class UserRegistrationRequest {
       return new UserRegistrationRequest(this);
     }
 
-    public Builder username(String value) {
+    Builder username(String value) {
       username = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }
 
-    public Builder email(String value) {
+    Builder email(String value) {
       email = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }
 
-    public Builder password(String value) {
+    Builder password(String value) {
       hashedPassword = Passwords.hash(CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value)));
       return this;
     }

@@ -29,27 +29,27 @@ class RegisteredUser {
     imageUrl = b.imageUrl;
   }
 
-  public long id() {
+  long id() {
     return id;
   }
 
-  public String email() {
+  String email() {
     return email;
   }
 
-  public String hashedPassword() {
+  String hashedPassword() {
     return hashedPassword;
   }
 
-  public String username() {
+  String username() {
     return username;
   }
 
-  public String biography() {
+  String biography() {
     return biography;
   }
 
-  public String imageUrl() {
+  String imageUrl() {
     return imageUrl;
   }
 
@@ -104,7 +104,7 @@ class RegisteredUser {
       clear();
     }
 
-    public boolean isInitialized() {
+    boolean isInitialized() {
       return id > 0
         && !email.isEmpty()
         && !hashedPassword.isEmpty()
@@ -133,7 +133,7 @@ class RegisteredUser {
       return this;
     }
 
-    public RegisteredUser build() {
+    RegisteredUser build() {
       if (id <= 0) {
         throw new IllegalArgumentException("id is required");
       }
@@ -150,32 +150,32 @@ class RegisteredUser {
       return new RegisteredUser(this);
     }
 
-    public Builder id(long value) {
+    Builder id(long value) {
       id = value > 0 ? value : -1;
       return this;
     }
 
-    public Builder email(String value) {
+    Builder email(String value) {
       email = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }
 
-    public Builder hashedPassword(String value) {
+    Builder hashedPassword(String value) {
       hashedPassword = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }
 
-    public Builder username(String value) {
+    Builder username(String value) {
       username = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }
 
-    public Builder biography(String value) {
+    Builder biography(String value) {
       biography = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }
 
-    public Builder imageUrl(String value) {
+    Builder imageUrl(String value) {
       imageUrl = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }

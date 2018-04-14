@@ -8,9 +8,9 @@ import io.vertx.core.json.JsonObject;
  * @author Samer Kanjo
  * @since 0.2.0 4/13/18 9:54 AM
  */
-public class AuthenticatedUser {
+class AuthenticatedUser {
 
-  public static Builder newBuilder() {
+  static Builder newBuilder() {
     return new Builder();
   }
 
@@ -22,7 +22,7 @@ public class AuthenticatedUser {
     token = b.token;
   }
 
-  public void writeTo(JsonObject json) {
+  void writeTo(JsonObject json) {
     final JsonObject userObj = new JsonObject();
     json.put("user", userObj);
 
@@ -43,15 +43,15 @@ public class AuthenticatedUser {
     }
   }
 
-  public RegisteredUser user() {
+  RegisteredUser user() {
     return user;
   }
 
-  public String token() {
+  String token() {
     return token;
   }
 
-  public static class Builder {
+  static class Builder {
 
     private RegisteredUser user;
     private String token;
@@ -60,26 +60,26 @@ public class AuthenticatedUser {
       clear();
     }
 
-    public boolean isInitialized() {
+    boolean isInitialized() {
       return user != null
         && !token.isEmpty();
     }
 
-    public Builder mergeFrom(AuthenticatedUser other) {
+    Builder mergeFrom(AuthenticatedUser other) {
       user(other.user);
       token(other.token);
 
       return this;
     }
 
-    public Builder clear() {
+    Builder clear() {
       user = null;
       token = "";
 
       return this;
     }
 
-    public AuthenticatedUser build() {
+    AuthenticatedUser build() {
       if (user == null) {
         throw new IllegalArgumentException("user is required");
       }
@@ -90,12 +90,12 @@ public class AuthenticatedUser {
       return new AuthenticatedUser(this);
     }
 
-    public Builder user(RegisteredUser value) {
+    Builder user(RegisteredUser value) {
       user = value;
       return this;
     }
 
-    public Builder token(String value) {
+    Builder token(String value) {
       token = CharMatcher.whitespace().trimFrom(Strings.nullToEmpty(value));
       return this;
     }

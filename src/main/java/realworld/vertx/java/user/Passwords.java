@@ -12,7 +12,7 @@ import java.util.Base64;
  * @author Samer Kanjo
  * @since 0.2.0 3/31/18 5:09 PM
  */
-public class Passwords {
+class Passwords {
 
   private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
 
@@ -24,7 +24,7 @@ public class Passwords {
   private static final int SALT_INDEX = 0;
   private static final int PBKDF2_INDEX = 1;
 
-  public static String hash(String password) {
+  static String hash(String password) {
     final SecureRandom random = new SecureRandom();
     final byte[] salt = new byte[SALT_BYTE_SIZE];
     random.nextBytes(salt);
@@ -37,7 +37,7 @@ public class Passwords {
     return hash;
   }
 
-  public static boolean verify(String password, String storedHash) {
+  static boolean verify(String password, String storedHash) {
     final String[] parts = storedHash.split(":");
 
     if (parts.length != HASH_SECTIONS) {

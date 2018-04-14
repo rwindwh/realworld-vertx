@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
  * @author Samer Kanjo
  * @since 0.2.0 1/1/18 11:38 PM
  */
-public class RegisterUserHandler implements Handler<RoutingContext> {
+class RegisterUserHandler implements Handler<RoutingContext> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RegisterUserHandler.class);
 
   private final UserService userService;
 
-  public RegisterUserHandler(UserService userService) {
+  RegisterUserHandler(UserService userService) {
     this.userService = userService;
   }
 

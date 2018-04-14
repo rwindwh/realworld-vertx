@@ -15,7 +15,7 @@ import java.util.UUID;
  * @author Samer Kanjo
  * @since 0.2.0 4/13/18 5:57 PM
  */
-public class WebTokens {
+class WebTokens {
 
   private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
@@ -26,7 +26,7 @@ public class WebTokens {
   private static final int HMAC_KEY_BYTE_SIZE = 16;
   private static final String ISSUER = "realworld-vertx";
 
-  public static String create(String subject) {
+  static String create(String subject) {
     final Instant iat = Instant.now();
     final Instant exp = iat.plus(Duration.ofHours(TOKEN_TTL_HOURS));
 
@@ -45,7 +45,7 @@ public class WebTokens {
     return token;
   }
 
-  public static Jws<Claims> parse(String token) {
+  static Jws<Claims> parse(String token) {
     final Key signingKey = new SecretKeySpec(HMAC_KEY_BYTES, SIGNATURE_ALGORITHM.getJcaName());
 
     final Jws<Claims> claims = Jwts.parser()
