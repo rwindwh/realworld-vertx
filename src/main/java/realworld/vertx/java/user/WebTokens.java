@@ -19,11 +19,11 @@ class WebTokens {
 
   private static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
-  private static final String HMAC_KEY_BASE64 = "olRhaAXVFiK0RLyHWnrxIA";
+  private static final String HMAC_KEY_BASE64 = "vbwtMup-Ij9GTSYUBGEQZlEzcg59ktD4Lp-d8Lejwxw";
   private static final byte[] HMAC_KEY_BYTES = Base64.getUrlDecoder().decode(HMAC_KEY_BASE64);
 
   private static final int TOKEN_TTL_HOURS = 24;
-  private static final int HMAC_KEY_BYTE_SIZE = 16;
+  private static final int HMAC_KEY_BYTE_SIZE = 32;
   private static final String ISSUER = "realworld-vertx";
 
   static String create(String subject) {
